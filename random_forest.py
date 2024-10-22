@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
@@ -13,12 +14,26 @@ print(data)
 # Check for missing values and handle them
 data = data.dropna()
 
+# Convert categorical columns to numerical (e.g., sex, cp, etc.)
+data['sex'] = data['sex'].astype(int)
+data['cp'] = data['cp'].astype(int)
+data['fbs'] = data['fbs'].astype(int)
+data['restecg'] = data['restecg'].astype(int)
+data['exang'] = data['exang'].astype(int)
+data['slope'] = data['slope'].astype(int)
+data['ca'] = data['ca'].astype(int)
+data['thal'] = data['thal'].astype(int)
+
 # Define features (X) and target (y) variables
 X = data.drop('target', axis=1)
 y = data['target']
 
-# Split the dataset into training (80%) and testing (20%) sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Standardize features (scale numerical data)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Split the dataset into training (80%) and testing (20%) sets, using the scaled data
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
 # Initialize the RandomForestClassifier with additional parameters
 rf_model = RandomForestClassifier(
@@ -31,7 +46,7 @@ rf_model = RandomForestClassifier(
     random_state=42  # For reproducibility
 )
 
-# Train the model
+# Train the model using the scaled training data
 rf_model.fit(X_train, y_train)
 
 # Make predictions on the test set
@@ -44,18 +59,27 @@ print(f'Accuracy: {accuracy * 100:.2f}%')
 # Print a detailed classification report
 print(classification_report(y_test, y_pred))
 
-# Define the feature names from the training data
-feature_names = X_train.columns
+# Get the predicted probabilities for each sample in the test set
+y_probs = rf_model.predict_proba(X_test)[:, 1]  # Probabilities for the positive class (heart disease)
 
-# New data input considered as the user input
-new_data = np.array([[63, 1, 3, 145, 233, 1, 0, 150, 0, 2.3, 0, 0, 1]])
-new_data_df = pd.DataFrame(new_data, columns=feature_names)
+# Define risk tiers based on probability thresholds
+def categorize_risk(prob):
+    if prob < 0.2:
+        return 'Low Risk (Green)'
+    elif prob < 0.4:
+        return 'Slight Risk (Yellow)'
+    elif prob < 0.6:
+        return 'Moderate Risk (Orange)'
+    elif prob < 0.8:
+        return 'High Risk (Dark Orange)'
+    else:
+        return 'Extreme Risk (Bright Red)'
 
-# Make predictions on the new data
-new_prediction = rf_model.predict(new_data_df)
+# Apply the categorization to the predicted probabilities
+risk_categories = [categorize_risk(prob) for prob in y_probs]
 
-# Output the result
-if new_prediction[0] == 1:
-    print("High risk of heart disease")
-else:
-    print("Low risk of heart disease")
+# Print the first few risk categories
+print(risk_categories[:10])
+
+# Print the predicted probabilities for the test data
+print(y_probs)
