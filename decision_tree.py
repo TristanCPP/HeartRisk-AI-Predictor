@@ -1,57 +1,83 @@
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
-from sklearn import metrics
+from sklearn.metrics import accuracy_score, classification_report
 
-# Load the dataset
+# Load the Cleveland dataset (replace 'cleveland.csv' with your actual file path)
 data = pd.read_csv('Heart_disease_cleveland_new.csv')
 
-# Define features (independent variables) and the target (dependent variable)
-features = data.drop('target', axis=1)
-target = data['target']
+# Display the first few rows of the dataset
+print(data)
 
-# Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+# Check for missing values and handle them
+data = data.dropna()
 
-# Create a decision tree classifier
-clf = DecisionTreeClassifier()
+# Convert categorical columns to numerical (e.g., sex, cp, etc.)
+data['sex'] = data['sex'].astype(int)
+data['cp'] = data['cp'].astype(int)
+data['fbs'] = data['fbs'].astype(int)
+data['restecg'] = data['restecg'].astype(int)
+data['exang'] = data['exang'].astype(int)
+data['slope'] = data['slope'].astype(int)
+data['ca'] = data['ca'].astype(int)
+data['thal'] = data['thal'].astype(int)
 
-# Train the classifier
-clf.fit(X_train, y_train)
+# Define features (X) and target (y) variables
+X = data.drop('target', axis=1)
+y = data['target']
 
-# Test the classifier
-y_pred = clf.predict(X_test)
+# Standardize features (scale numerical data)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
-# Print accuracy
-print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+# Split the dataset into training (80%) and testing (20%) sets, using the scaled data
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-# # Function to take user input and predict heart disease
-# def predict_heart_disease():
-#     print("Please enter the following health information:")
-#     age = int(input("Age: "))
-#     sex = int(input("Sex (1=Male, 0=Female): "))
-#     cp = int(input("Chest pain type (0-3): "))
-#     trestbps = int(input("Resting blood pressure: "))
-#     chol = int(input("Cholesterol level: "))
-#     fbs = int(input("Fasting blood sugar (1=True, 0=False): "))
-#     restecg = int(input("Resting ECG results (0-2): "))
-#     thalach = int(input("Maximum heart rate achieved: "))
-#     exang = int(input("Exercise induced angina (1=Yes, 0=No): "))
-#     oldpeak = float(input("ST depression induced by exercise: "))
-#     slope = int(input("Slope of the peak exercise ST segment (0-2): "))
-#     ca = int(input("Number of major vessels colored by fluoroscopy (0-3): "))
-#     thal = int(input("Thalassemia (1=Normal, 2=Fixed defect, 3=Reversible defect): "))
-    
-#     user_data = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
-    
-#     # Predict based on user input
-#     prediction = clf.predict(user_data)
-    
-#     if prediction == 1:
-#         print("Prediction: You are at risk of heart disease.")
-#     else:
-#         print("Prediction: You are not at risk of heart disease.")
+# Initialize the DecisionTreeClassifier with additional parameters
+dt_model = DecisionTreeClassifier(
+    criterion='gini',  # You can also use 'entropy'
+    max_depth=None,  # Control the maximum depth of the tree
+    min_samples_split=2,  # Minimum samples to split an internal node
+    min_samples_leaf=1,  # Minimum samples at a leaf node
+    random_state=42  # For reproducibility
+)
 
-# # Call the prediction function
-# predict_heart_disease()
+# Train the model using the scaled training data
+dt_model.fit(X_train, y_train)
 
+# Make predictions on the test set
+y_pred = dt_model.predict(X_test)
+
+# Calculate the accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy * 100:.2f}%')
+
+# Print a detailed classification report
+print(classification_report(y_test, y_pred))
+
+# Get the predicted probabilities for each sample in the test set
+y_probs = dt_model.predict_proba(X_test)[:, 1]  # Probabilities for the positive class (heart disease)
+
+# Define risk tiers based on probability thresholds
+def categorize_risk(prob):
+    if prob < 0.2:
+        return 'Low Risk (Green)'
+    elif prob < 0.4:
+        return 'Slight Risk (Yellow)'
+    elif prob < 0.6:
+        return 'Moderate Risk (Orange)'
+    elif prob < 0.8:
+        return 'High Risk (Dark Orange)'
+    else:
+        return 'Extreme Risk (Bright Red)'
+
+# Apply the categorization to the predicted probabilities
+risk_categories = [categorize_risk(prob) for prob in y_probs]
+
+# Print the first few risk categories
+print(risk_categories[:10])
+
+# Print the predicted probabilities for the test data
+print(y_probs)
