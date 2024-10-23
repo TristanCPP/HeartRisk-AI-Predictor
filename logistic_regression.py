@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -68,7 +70,12 @@ def categorize_risk(prob):
 risk_categories = [categorize_risk(prob) for prob in y_probs]
 
 # Print the first few results
-print(risk_categories[:10])
+#   print(risk_categories[:10])
 
 # Print the probabilities for the the test data
-print(y_probs)
+#   print(y_probs)
+
+plt.figure(figsize=(10,8))
+sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title("Feature Correlation Matrix")
+plt.show()
