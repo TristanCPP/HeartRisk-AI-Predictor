@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 # Load the dataset from the local file
-data = pd.read_csv('Heart_disease_cleveland_new.csv')
+data = pd.read_csv('data/Heart_disease_cleveland_new.csv')
 
 # Replace '?' with NaN and drop rows with missing values
 data.replace('?', np.nan, inplace=True)
@@ -29,6 +29,7 @@ selected_features = ['age', 'sex', 'cp', 'thalach', 'exang', 'slope', 'thal']
 
 # Split features (X) and target (y)
 X = data[selected_features]
+#X = data.drop(columns='target')
 y = data['target']
 
 # Standardize features (scale numerical data)
@@ -50,6 +51,20 @@ y_pred = model.predict(X_test)
 # Evaluate the model
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy * 100:.2f}%')
+
+
+
+
+
+
+
+
+
+
+
+
+
+#*************************************************************************************************
 
 # Get the predicted probabilities for each sample in the test set
 #   y_probs = model.predict_proba(X_test)[:, 1]  # Probabilities for positive class (heart disease)
@@ -76,9 +91,8 @@ print(f'Accuracy: {accuracy * 100:.2f}%')
 # Print the probabilities for the the test data
 #   print(y_probs)
 
-plt.figure(figsize=(10,8))
-sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt='.2f')
-plt.title("Feature Correlation Matrix")
-plt.show()
+# plt.figure(figsize=(10,8))
+# sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+# plt.title("Feature Correlation Matrix")
+# plt.show()
 
-print("DAWGS")
