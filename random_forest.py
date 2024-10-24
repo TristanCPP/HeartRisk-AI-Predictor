@@ -1,18 +1,18 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
-# Load the Cleveland dataset (replace 'cleveland.csv' with your actual file path)
-data = pd.read_csv("Heart_disease_cleveland_new.csv")
+# Load the dataset from the local file
+data = pd.read_csv('Heart_disease_cleveland_new.csv')
 
-# Display the first few rows of the dataset
-print(data)
-
-# Check for missing values and handle them
-data = data.dropna()
+# Replace '?' with NaN and drop rows with missing values
+data.replace('?', np.nan, inplace=True)
+data.dropna(inplace=True)
 
 # Convert categorical columns to numerical (e.g., sex, cp, etc.)
 data['sex'] = data['sex'].astype(int)
@@ -24,15 +24,15 @@ data['slope'] = data['slope'].astype(int)
 data['ca'] = data['ca'].astype(int)
 data['thal'] = data['thal'].astype(int)
 
-# Define features (X) and target (y) variables
-X = data.drop('target', axis=1)
+# Split features (X) and target (y)
+X = data.drop(columns='target')
 y = data['target']
 
 # Standardize features (scale numerical data)
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# Split the dataset into training (80%) and testing (20%) sets, using the scaled data
+# Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
 # Initialize the RandomForestClassifier with additional parameters
@@ -46,13 +46,13 @@ rf_model = RandomForestClassifier(
     random_state=42  # For reproducibility
 )
 
-# Train the model using the scaled training data
+# Train the model
 rf_model.fit(X_train, y_train)
 
 # Make predictions on the test set
 y_pred = rf_model.predict(X_test)
 
-# Calculate the accuracy
+# Evaluate the model
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy * 100:.2f}%')
 
@@ -78,8 +78,14 @@ def categorize_risk(prob):
 # Apply the categorization to the predicted probabilities
 risk_categories = [categorize_risk(prob) for prob in y_probs]
 
-# Print the first few risk categories
+# Print the first few results
 print(risk_categories[:10])
 
-# Print the predicted probabilities for the test data
+# Print the probabilities for the test data
 print(y_probs)
+
+# Plot the feature correlation matrix
+plt.figure(figsize=(10,8))
+sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title("Feature Correlation Matrix")
+plt.show()
