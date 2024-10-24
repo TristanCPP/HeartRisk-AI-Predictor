@@ -1,20 +1,17 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
-# Load the Cleveland dataset (replace 'cleveland.csv' with your actual file path)
+# Load the Cleveland dataset
 data = pd.read_csv('Heart_disease_cleveland_new.csv')
 
-# Display the first few rows of the dataset
-print(data)
-
-# Check for missing values and handle them
+# Handle missing values
 data = data.dropna()
 
-# Convert categorical columns to numerical (e.g., sex, cp, etc.)
+# Convert categorical columns to numerical
 data['sex'] = data['sex'].astype(int)
 data['cp'] = data['cp'].astype(int)
 data['fbs'] = data['fbs'].astype(int)
@@ -24,37 +21,40 @@ data['slope'] = data['slope'].astype(int)
 data['ca'] = data['ca'].astype(int)
 data['thal'] = data['thal'].astype(int)
 
-# Define features (X) and target (y) variables
+# Define features (X) and target (y)
 X = data.drop('target', axis=1)
 y = data['target']
 
-# Standardize features (scale numerical data)
+# Standardize features
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# Split the dataset into training (80%) and testing (20%) sets, using the scaled data
+# Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-# Initialize the DecisionTreeClassifier with additional parameters
+# Initialize and train Decision Tree with improved hyperparameters
 dt_model = DecisionTreeClassifier(
-    criterion='gini',  # You can also use 'entropy'
-    max_depth=None,  # Control the maximum depth of the tree
-    min_samples_split=2,  # Minimum samples to split an internal node
-    min_samples_leaf=1,  # Minimum samples at a leaf node
-    random_state=42  # For reproducibility
+    criterion='gini',
+    max_depth=10,
+    min_samples_split=10,
+    min_samples_leaf=5,
+    max_features='sqrt',
+    random_state=42
 )
 
-# Train the model using the scaled training data
+# Cross-validation to evaluate the model
+cv_scores = cross_val_score(dt_model, X_scaled, y, cv=5)
+print(f'Cross-Validation Accuracy: {np.mean(cv_scores) * 100:.2f}%')
+
+# Train the model
 dt_model.fit(X_train, y_train)
 
-# Make predictions on the test set
+# Make predictions and evaluate accuracy
 y_pred = dt_model.predict(X_test)
-
-# Calculate the accuracy
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy * 100:.2f}%')
 
-# Print a detailed classification report
+# Print detailed classification report
 print(classification_report(y_test, y_pred))
 
 # Get the predicted probabilities for each sample in the test set
