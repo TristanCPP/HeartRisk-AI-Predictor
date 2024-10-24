@@ -28,7 +28,8 @@ data['thal'] = data['thal'].astype(int)
 selected_features = ['age', 'sex', 'cp', 'thalach', 'exang', 'slope', 'thal']
 
 # Split features (X) and target (y)
-X = data[selected_features]
+X = data.drop(columns='target')
+# X = data[selected_features]
 y = data['target']
 
 # Standardize features (scale numerical data)
@@ -60,7 +61,7 @@ y_pred_best = best_model.predict(X_test)
 
 # Evaluate the model’s accuracy on the test set
 accuracy_best = accuracy_score(y_test, y_pred_best)
-print(f"Test Set Accuracy with Best Parameters: {accuracy_best * 100:.2f}")
+print(f"Test Set Accuracy with Best Parameters: {accuracy_best * 100:.2f}%")
 
 
 
