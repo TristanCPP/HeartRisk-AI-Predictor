@@ -6,9 +6,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import cross_val_score
-from imblearn.over_sampling import SMOTE
 
 # Load the dataset from the local file
 data = pd.read_csv('Heart_disease_cleveland_new.csv')
