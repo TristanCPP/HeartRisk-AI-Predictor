@@ -10,7 +10,6 @@ from sklearn.metrics import accuracy_score, classification_report
 # Load the dataset from the local file
 data = pd.read_csv('Heart_disease_cleveland_new.csv')
 
-# Replace '?' with NaN and drop rows with missing values
 #data.replace('?', np.nan, inplace=True)
 data.dropna(inplace=True)
 
