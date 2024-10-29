@@ -24,8 +24,6 @@ data['slope'] = data['slope'].astype(int)
 data['ca'] = data['ca'].astype(int)
 data['thal'] = data['thal'].astype(int)
 
-# We remove 'oldpeak' and 'ca' for this experiment based on their correlations
-selected_features = ['age', 'sex', 'cp', 'thalach', 'exang', 'slope', 'thal']
 
 # Split features (X) and target (y)
 X = data.drop(columns='target')
@@ -63,21 +61,6 @@ y_pred_best = best_model.predict(X_test)
 accuracy_best = accuracy_score(y_test, y_pred_best)
 print(f"Test Set Accuracy with Best Parameters: {accuracy_best * 100:.2f}%")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Train the model
 #   model.fit(X_train, y_train)
 
@@ -87,28 +70,4 @@ print(f"Test Set Accuracy with Best Parameters: {accuracy_best * 100:.2f}%")
 # Evaluate the model
     # accuracy = accuracy_score(y_test, y_pred)
     # print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# Get the predicted probabilities for each sample in the test set
-#   y_probs = model.predict_proba(X_test)[:, 1]  # Probabilities for positive class (heart disease)
-
-# Define risk tiers based on probability thresholds
-# def categorize_risk(prob):
-#     if prob < 0.2:
-#         return 'Low Risk (Green)'
-#     elif prob < 0.4:
-#         return 'Slight Risk (Yellow)'
-#     elif prob < 0.6:
-#         return 'Moderate Risk (Orange)'
-#     elif prob < 0.8:
-#         return 'High Risk (Dark Orange)'
-#     else:
-#         return 'Extreme Risk (Bright Red)'
-    
-# Apply the categorization to the predicted probabilities
-#   risk_categories = [categorize_risk(prob) for prob in y_probs]
-
-# plt.figure(figsize=(10,8))
-# sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt='.2f')
-# plt.title("Feature Correlation Matrix")
-# plt.show()
 
