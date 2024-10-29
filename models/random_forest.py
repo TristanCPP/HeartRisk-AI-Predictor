@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
@@ -10,11 +10,10 @@ from sklearn.metrics import accuracy_score, classification_report
 # Load the dataset from the local file
 data = pd.read_csv('Heart_disease_cleveland_new.csv')
 
-# Replace '?' with NaN and drop rows with missing values
-data.replace('?', np.nan, inplace=True)
+#data.replace('?', np.nan, inplace=True)
 data.dropna(inplace=True)
 
-# Convert categorical columns to numerical (e.g., sex, cp, etc.)
+# Convert categorical columns to numerical (age, sex, cp, etc.)
 data['sex'] = data['sex'].astype(int)
 data['cp'] = data['cp'].astype(int)
 data['fbs'] = data['fbs'].astype(int)
@@ -35,18 +34,25 @@ X_scaled = scaler.fit_transform(X)
 # Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-# Initialize the RandomForestClassifier with additional parameters
+# Initialize the RandomForestClassifier with optimized parameters for better accuracy
 rf_model = RandomForestClassifier(
-    n_estimators=100,
-    criterion='gini',  # You could also try 'entropy'
-    max_depth=None,  # Control the maximum depth of the trees
-    min_samples_split=2,  # Minimum samples to split an internal node
-    min_samples_leaf=1,  # Minimum samples at a leaf node
-    max_features='sqrt',  # Number of features to consider for the best split
-    random_state=42  # For reproducibility
+    n_estimators=250,          
+    criterion='entropy', 
+    max_depth=10,              
+    min_samples_split=10,      
+    min_samples_leaf=4,        
+    max_features='log2',       
+    random_state=42,           
+    bootstrap=True            
 )
 
-# Train the model
+
+# Perform 5-fold cross-validation
+cv_scores = cross_val_score(rf_model, X_scaled, y, cv=5, scoring='accuracy')
+print(f'Cross-Validation Accuracy Scores: {cv_scores}')
+print(f'Mean Cross-Validation Accuracy: {np.mean(cv_scores) * 100:.2f}%')
+
+# Train the model on the entire training data
 rf_model.fit(X_train, y_train)
 
 # Make predictions on the test set
@@ -54,7 +60,7 @@ y_pred = rf_model.predict(X_test)
 
 # Evaluate the model
 accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
+print(f'Test Set Accuracy: {accuracy * 100:.2f}%')
 
 # Print a detailed classification report
 print(classification_report(y_test, y_pred))
@@ -84,7 +90,7 @@ print(risk_categories[:10])
 # Print the probabilities for the test data
 print(y_probs)
 
-# Plot the feature correlation matrix
+# (Heatmap) Plot the feature correlation matrix
 plt.figure(figsize=(10,8))
 sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt='.2f')
 plt.title("Feature Correlation Matrix")
