@@ -1,0 +1,48 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler, LabelEncoder, MinMaxScaler
+from sklearn.metrics import accuracy_score, classification_report
+
+# Step 1: Load the dataset
+data = pd.read_csv('heart_disease_data.csv')
+
+# Step 2: Make a copy of the original dataset
+processed_data = data.copy(deep=True)
+
+# Remove rows with Cholesterol value of 0
+processed_data = processed_data[(processed_data['Cholesterol'] != 0)]
+
+# Separate features and target variable
+X = processed_data.drop(columns=['HeartDisease'])
+y = processed_data['HeartDisease']
+
+# Step 3: Label Encoding for binary categorical variables
+encoder = LabelEncoder()
+
+X['Sex'] = encoder.fit_transform(X['Sex'])
+X['ChestPainType'] = encoder.fit_transform(X['ChestPainType'])
+X['RestingECG'] = encoder.fit_transform(X['RestingECG'])
+X['ExerciseAngina'] = encoder.fit_transform(X['ExerciseAngina'])
+X['ST_Slope'] = encoder.fit_transform(X['ST_Slope'])
+
+# Scale the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=101)
+
+# Initialize and train the SVM model
+svm_model = SVC(max_iter=1000, random_state=101)
+svm_model.fit(X_train, y_train)
+
+# Predict the test set results
+y_pred = svm_model.predict(X_test)
+
+# Print accuracy score
+print(accuracy_score(y_test, y_pred))
