@@ -10,6 +10,10 @@ from sklearn.metrics import accuracy_score, classification_report
 data = pd.read_csv('heart_disease_data.csv')
 data.info()
 
+# # One-Hot encoding
+# categorical_columns = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal']
+# data = pd.get_dummies(data, columns=categorical_columns, drop_first=True)
+
 # Map categorical columns to numerical values
 data['Sex'] = data['Sex'].map({'M': 1, 'F': 0})
 data['ChestPainType'] = data['ChestPainType'].map({'TA': 0, 'ATA': 1, 'NAP': 2, 'ASY': 3})
