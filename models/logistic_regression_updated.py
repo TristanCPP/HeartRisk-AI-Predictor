@@ -22,23 +22,22 @@ processed_data = processed_data[(processed_data['Cholesterol']!=0)]
 X = processed_data.drop(columns=['HeartDisease'])
 y = processed_data['HeartDisease']
 
-# Step 3: Label Encoding for binary categorical variables
-encoder = LabelEncoder()
+# Step 3: Encode binary and categorical features
+X['Sex'] = X['Sex'].map({'M': 1, 'F': 0})
+X['ExerciseAngina'] = X['ExerciseAngina'].map({'Y': 1, 'N': 0})
+X = pd.get_dummies(X, columns=['ChestPainType', 'ST_Slope', 'RestingECG'], drop_first=True)
 
-X['Sex'] = encoder.fit_transform(X['Sex'])
-X['ChestPainType'] = encoder.fit_transform(X['ChestPainType'])
-X['RestingECG'] = encoder.fit_transform(X['RestingECG'])
-X['ExerciseAngina'] = encoder.fit_transform(X['ExerciseAngina'])
-X['ST_Slope'] = encoder.fit_transform(X['ST_Slope'])
-
-
+# Step 4: Scale numerical features
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transform(
+    X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']]
+)
 
-X_train , X_test , y_train , y_test = train_test_split(X_scaled,y ,test_size=0.2 , random_state=101)
+
+X_train , X_test , y_train , y_test = train_test_split(X ,y ,test_size=0.2 , random_state=101)
 
 log_reg_model = LogisticRegression(max_iter=1000)
-log_reg_model.fit(X_train, y_train)
+log_reg_model.fit(X_train, y_train) 
 
 y_pred = log_reg_model.predict(X_test)
 
