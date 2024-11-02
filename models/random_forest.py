@@ -12,6 +12,10 @@ data = pd.read_csv('Heart_disease_cleveland_new.csv')
 # drop rows with missing values
 data.dropna(inplace=True)
 
+# # One-Hot encoding
+# categorical_columns = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal']
+# data = pd.get_dummies(data, columns=categorical_columns, drop_first=True)
+
 # Convert categorical columns to numerical (age, sex, cp, etc.)
 data['sex'] = data['sex'].astype(int)
 data['cp'] = data['cp'].astype(int)
