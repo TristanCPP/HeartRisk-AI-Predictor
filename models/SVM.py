@@ -6,7 +6,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
 
 # Load the Cleveland dataset
-data = pd.read_csv('Heart_disease_cleveland_new.csv')
+data = pd.read_csv('data/Heart_disease_cleveland_new.csv')
 
 # Handle missing values
 data = data.dropna()

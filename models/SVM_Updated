@@ -21,21 +21,24 @@ processed_data = processed_data[(processed_data['Cholesterol'] != 0)]
 X = processed_data.drop(columns=['HeartDisease'])
 y = processed_data['HeartDisease']
 
-# Step 3: Label Encoding for binary categorical variables
-encoder = LabelEncoder()
+# Define categorical data with all possible categories
+X['ChestPainType'] = pd.Categorical(X['ChestPainType'], categories=['ATA', 'NAP', 'ASY', 'TA'])
+X['RestingECG'] = pd.Categorical(X['RestingECG'], categories=['Normal', 'ST', 'LVH'])
+X['ST_Slope'] = pd.Categorical(X['ST_Slope'], categories=['Up', 'Flat', 'Down'])
 
-X['Sex'] = encoder.fit_transform(X['Sex'])
-X['ChestPainType'] = encoder.fit_transform(X['ChestPainType'])
-X['RestingECG'] = encoder.fit_transform(X['RestingECG'])
-X['ExerciseAngina'] = encoder.fit_transform(X['ExerciseAngina'])
-X['ST_Slope'] = encoder.fit_transform(X['ST_Slope'])
+# One-Hot Encode non-binary categorical variables without dropping any category
+X = pd.get_dummies(X, columns=['Sex','ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
 
-# Scale the features
+# Scale numerical features
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transform(
+    X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']]
+)
+
+print(X.head())
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=101)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
 
 # Initialize and train the SVM model
 svm_model = SVC(max_iter=1000, random_state=101)

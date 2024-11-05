@@ -44,7 +44,8 @@ log_reg_model.fit(X_train, y_train)
 
 y_pred = log_reg_model.predict(X_test)
 
-print("Accuracy:", accuracy_score(y_test, y_pred))
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy * 100:.2f}%')
 
 # # Updated Feature Names after one-hot encoding
 # feature_names = X.columns

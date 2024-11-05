@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
 # Load the dataset from the local file
-data = pd.read_csv('Heart_disease_cleveland_new.csv')
+data = pd.read_csv('data/Heart_disease_cleveland_new.csv')
 
 # drop rows with missing values
 data.dropna(inplace=True)
@@ -31,7 +31,7 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 # Split data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=101)
 
 #Initialize the RandomForestClassifier with optimized parameters for better accuracy
 rf_model = RandomForestClassifier(
@@ -60,30 +60,30 @@ y_pred = rf_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy * 100:.2f}%')
 
-# Print a detailed classification report
-print(classification_report(y_test, y_pred))
+# # Print a detailed classification report
+# print(classification_report(y_test, y_pred))
 
-# Get the predicted probabilities for each sample in the test set
-y_probs = rf_model.predict_proba(X_test)[:, 1]  # Probabilities for the positive class (heart disease)
+# # Get the predicted probabilities for each sample in the test set
+# y_probs = rf_model.predict_proba(X_test)[:, 1]  # Probabilities for the positive class (heart disease)
 
-# Define risk tiers based on probability thresholds
-def categorize_risk(prob):
-    if prob < 0.2:
-        return 'Low Risk (Green)'
-    elif prob < 0.4:
-        return 'Slight Risk (Yellow)'
-    elif prob < 0.6:
-        return 'Moderate Risk (Orange)'
-    elif prob < 0.8:
-        return 'High Risk (Dark Orange)'
-    else:
-        return 'Extreme Risk (Bright Red)'
+# # Define risk tiers based on probability thresholds
+# def categorize_risk(prob):
+#     if prob < 0.2:
+#         return 'Low Risk (Green)'
+#     elif prob < 0.4:
+#         return 'Slight Risk (Yellow)'
+#     elif prob < 0.6:
+#         return 'Moderate Risk (Orange)'
+#     elif prob < 0.8:
+#         return 'High Risk (Dark Orange)'
+#     else:
+#         return 'Extreme Risk (Bright Red)'
 
-# Apply the categorization to the predicted probabilities
-risk_categories = [categorize_risk(prob) for prob in y_probs]
+# # Apply the categorization to the predicted probabilities
+# risk_categories = [categorize_risk(prob) for prob in y_probs]
 
-# Print the first few results
-print(risk_categories[:10])
+# # Print the first few results
+# print(risk_categories[:10])
 
-# Print the probabilities for the test data
-print(y_probs)
+# # Print the probabilities for the test data
+# print(y_probs)

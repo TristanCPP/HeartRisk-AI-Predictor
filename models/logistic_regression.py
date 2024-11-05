@@ -12,9 +12,9 @@ from sklearn.metrics import accuracy_score
 # Load the dataset from the local file
 data = pd.read_csv('data/Heart_disease_cleveland_new.csv')
 
-# Replace '?' with NaN and drop rows with missing values
-data.replace('?', np.nan, inplace=True)
-data.dropna(inplace=True)
+# Split features (X) and target (y)
+X = data.drop(columns='target')
+y = data['target']
 
 # Convert categorical columns to numerical (e.g., sex, cp, etc.)
 data['sex'] = data['sex'].astype(int)
@@ -26,11 +26,7 @@ data['slope'] = data['slope'].astype(int)
 data['ca'] = data['ca'].astype(int)
 data['thal'] = data['thal'].astype(int)
 
-
-# Split features (X) and target (y)
-X = data.drop(columns='target')
-# X = data[selected_features]
-y = data['target']
+print(data.head())
 
 # Standardize features (scale numerical data)
 scaler = StandardScaler()
