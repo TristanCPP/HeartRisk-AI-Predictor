@@ -1,48 +1,42 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
 
 # Load the Cleveland dataset
-data = pd.read_csv('data/Heart_disease_cleveland_new.csv')
+data = pd.read_csv('data/heart_disease_data.csv')
 
-# Handle missing values
-data = data.dropna()
+# Preprocessing
+data_copy = data.copy(deep=True)
 
-# Convert categorical columns to numerical
-data['sex'] = data['sex'].astype(int)
-data['cp'] = data['cp'].astype(int)
-data['fbs'] = data['fbs'].astype(int)
-data['restecg'] = data['restecg'].astype(int)
-data['exang'] = data['exang'].astype(int)
-data['slope'] = data['slope'].astype(int)
-data['ca'] = data['ca'].astype(int)
-data['thal'] = data['thal'].astype(int)
+# Dropping rows where Cholesterol is 0
+data_copy = data_copy[(data_copy['Cholesterol'] != 0)]
 
-# Define features (X) and target (y)
-X = data.drop('target', axis=1)
-y = data['target']
+# Splitting features (X) and target variable (y)
+X = data_copy.drop(columns=['HeartDisease'])
+y = data_copy['HeartDisease']
 
-# Standardize features
+# Define categorical data with all possible categories
+X['ChestPainType'] = pd.Categorical(X['ChestPainType'], categories=['ATA', 'NAP', 'ASY', 'TA'])
+X['RestingECG'] = pd.Categorical(X['RestingECG'], categories=['Normal', 'ST', 'LVH'])
+X['ST_Slope'] = pd.Categorical(X['ST_Slope'], categories=['Up', 'Flat', 'Down'])
+
+# One-Hot Encode non-binary categorical variables without dropping any category
+X = pd.get_dummies(X, columns=['Sex', 'ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
+
+# Scale numerical features
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
-# Initialize and train SVM with a radial basis function (RBF) kernel
-svm_model = SVC(
-    kernel='rbf',               # Radial basis function kernel
-    C=1.0,                      # Regularization parameter
-    probability=True,           # Enable probability estimates
-    random_state=42
+X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transform(
+    X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']]
 )
 
-# Cross-validation to evaluate the model
-cv_scores = cross_val_score(svm_model, X_scaled, y, cv=5)
-print(f'Cross-Validation Accuracy: {np.mean(cv_scores) * 100:.2f}%')
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize the SVM model with default parameters
+svm_model = SVC()
 
 # Train the model
 svm_model.fit(X_train, y_train)
@@ -50,32 +44,7 @@ svm_model.fit(X_train, y_train)
 # Make predictions and evaluate accuracy
 y_pred = svm_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
+print(f'SVM Accuracy: {accuracy * 100:.2f}%')
 
-# Print detailed classification report
-print(classification_report(y_test, y_pred))
-
-# Get the predicted probabilities for each sample in the test set
-y_probs = svm_model.predict_proba(X_test)[:, 1]  # Probabilities for the positive class (heart disease)
-
-# Define risk tiers based on probability thresholds
-def categorize_risk(prob):
-    if 0 < prob < 0.2:
-        return 'Low Risk (Green)'
-    elif 0.2 < prob < 0.4:
-        return 'Slight Risk (Yellow)'
-    elif 0.4 < prob < 0.6:
-        return 'Moderate Risk (Orange)'
-    elif 0.6 < prob < 0.8:
-        return 'High Risk (Dark Orange)'
-    else:
-        return 'Extreme Risk (Bright Red)'
-
-# Apply the categorization to the predicted probabilities
-risk_categories = [categorize_risk(prob) for prob in y_probs]
-
-# Print the first few risk categories
-print(risk_categories[:10])
-
-# Print the predicted probabilities for the test data
-print(y_probs)
+# Print a detailed classification report
+print("SVM Classification Report:\n", classification_report(y_test, y_pred))

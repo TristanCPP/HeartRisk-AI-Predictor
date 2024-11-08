@@ -86,9 +86,5 @@ stacking_clf = StackingClassifier(
 stacking_clf.fit(X_train_best, y_train_sm)
 y_pred_stack = stacking_clf.predict(X_test_best)
 
-print(f"Stacking Classifier Accuracy: {accuracy_score(y_test, y_pred_stack)}")
-print(classification_report(y_test, y_pred_stack))
-
-# Step 12: Cross-Validation for Stacking Classifier
-stack_cv_scores = cross_val_score(stacking_clf, X_poly, y, cv=5, scoring='accuracy')
-print(f"Stacking Classifier Cross-Validation Accuracy: {np.mean(stack_cv_scores)}")
+print(f"Stacking Classifier Accuracy: {accuracy_score(y_test, y_pred_stack) * 100:.2f}%")
+print("Stacking Classifier Classification Report:\n", classification_report(y_test, y_pred_stack))

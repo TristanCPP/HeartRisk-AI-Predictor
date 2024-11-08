@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, classification_report
@@ -11,12 +11,11 @@ data = pd.read_csv('data/heart_disease_data.csv')
 data_copy = data.copy(deep=True)
 
 # Dropping rows where Cholesterol is 0
-data_copy = data_copy[(data_copy['Cholesterol']!=0)]
+data_copy = data_copy[(data_copy['Cholesterol'] != 0)]
 
 # Dropping target value from training data
 X = data_copy.drop(columns=['HeartDisease'])
 y = data_copy['HeartDisease']
-
 
 # Define categorical data with all possible categories
 X['ChestPainType'] = pd.Categorical(X['ChestPainType'], categories=['ATA', 'NAP', 'ASY', 'TA'])
@@ -24,7 +23,7 @@ X['RestingECG'] = pd.Categorical(X['RestingECG'], categories=['Normal', 'ST', 'L
 X['ST_Slope'] = pd.Categorical(X['ST_Slope'], categories=['Up', 'Flat', 'Down'])
 
 # One-Hot Encode non-binary categorical variables without dropping any category
-X = pd.get_dummies(X, columns=['Sex','ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
+X = pd.get_dummies(X, columns=['Sex', 'ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
 
 # Scale numerical features
 scaler = StandardScaler()
@@ -32,57 +31,15 @@ X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transfor
     X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']]
 )
 
-print(X.head())
-
 # Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
 
-# Initialize and train Decision Tree with improved hyperparameters
-dt_model = DecisionTreeClassifier(
-    criterion='gini',
-    max_depth=10,
-    min_samples_split=10,
-    min_samples_leaf=5,
-    max_features='sqrt',
-    random_state=42
-)
-
-# # Cross-validation to evaluate the model
-# cv_scores = cross_val_score(dt_model, X, y, cv=5)
-# print(f'Cross-Validation Accuracy: {np.mean(cv_scores) * 100:.2f}%')
-
-# Train the model
+# Initialize and train a base Decision Tree model
+dt_model = DecisionTreeClassifier(random_state=101)  # Base model with default parameters
 dt_model.fit(X_train, y_train)
 
 # Make predictions and evaluate accuracy
 y_pred = dt_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# # Print detailed classification report
-# print(classification_report(y_test, y_pred))
-
-# Get the predicted probabilities for each sample in the test set
-# y_probs = dt_model.predict_proba(X_test)[:, 1]  # Probabilities for the positive class (heart disease)
-
-# # Define risk tiers based on probability thresholds
-# def categorize_risk(prob):
-#     if prob < 0.2:
-#         return 'Low Risk (Green)'
-#     elif prob < 0.4:
-#         return 'Slight Risk (Yellow)'
-#     elif prob < 0.6:
-#         return 'Moderate Risk (Orange)'
-#     elif prob < 0.8:
-#         return 'High Risk (Dark Orange)'
-#     else:
-#         return 'Extreme Risk (Bright Red)'
-
-# # Apply the categorization to the predicted probabilities
-# risk_categories = [categorize_risk(prob) for prob in y_probs]
-
-# # Print the first few risk categories
-# print(risk_categories[:10])
-
-# # Print the predicted probabilities for the test data
-# print(y_probs)
+print(f'Decision Tree Accuracy: {accuracy * 100:.2f}%')
+print("Decision Tree Classification Report:\n", classification_report(y_test, y_pred))

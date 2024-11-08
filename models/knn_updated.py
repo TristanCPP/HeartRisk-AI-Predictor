@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, StackingClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
-from xgboost import XGBClassifier
 
 # Step 1: Load the dataset
 data = pd.read_csv('data/heart_disease_data.csv')
@@ -32,25 +30,30 @@ X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transfor
 # Step 5: Split the data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
 
-# Step 6: Define the base models
-log_reg = LogisticRegression(max_iter=500, solver='liblinear')
-rf_model = RandomForestClassifier(n_estimators=100, random_state=101)
-xgb_model = XGBClassifier(random_state=101)
+# Step 6: Define parameter grid for KNN
+param_grid = {
+    'n_neighbors': [3, 5, 7, 9, 11, 13, 15],
+    'weights': ['uniform', 'distance'],
+    'metric': ['euclidean', 'manhattan', 'minkowski']
+}
 
-# Step 7: Define the Stacking Classifier
-estimators = [
-    ('log_reg', log_reg),
-    ('random_forest', rf_model),
-    ('xgboost', xgb_model)
-]
-
-stacking_clf = StackingClassifier(
-    estimators=estimators, final_estimator=LogisticRegression(max_iter=1000)
+# Step 7: Perform Grid Search with Cross-Validation
+grid_search = GridSearchCV(
+    KNeighborsClassifier(),
+    param_grid,
+    cv=5,  # 5-fold cross-validation
+    scoring='accuracy',
+    n_jobs=-1  # Use all available cores
 )
+grid_search.fit(X_train, y_train)
 
-# Step 8: Train and evaluate the Stacking Classifier
-stacking_clf.fit(X_train, y_train)
-y_pred_stack = stacking_clf.predict(X_test)
+# Step 8: Get the best model and parameters
+best_knn = grid_search.best_estimator_
+#print("Best KNN Parameters:", grid_search.best_params_)
 
-print(f"Stacking Classifier Accuracy: {accuracy_score(y_test, y_pred_stack) * 100:.2f}%")
-print("Stacking Classifier Classification Report:\n", classification_report(y_test, y_pred_stack))
+# Step 9: Evaluate the optimized KNN model
+y_pred_knn = best_knn.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred_knn)
+print(f'KNN Accuracy: {accuracy * 100:.2f}%')
+print("KNN Classification Report:\n", classification_report(y_test, y_pred_knn))

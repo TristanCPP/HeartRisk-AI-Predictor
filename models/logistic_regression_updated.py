@@ -1,23 +1,20 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import joblib
-
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.preprocessing import StandardScaler, LabelEncoder, MinMaxScaler, OneHotEncoder
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score, classification_report
 
-# Step 1: Load the dataset
+# Load the dataset
 data = pd.read_csv('data/heart_disease_data.csv')
 
-# Step 2: Make a copy of the original dataset
+# Preprocessing
 data_copy = data.copy(deep=True)
 
 # Dropping rows where Cholesterol is 0
-data_copy = data_copy[(data_copy['Cholesterol']!=0)]
+data_copy = data_copy[(data_copy['Cholesterol'] != 0)]
 
+# Splitting features (X) and target variable (y)
 X = data_copy.drop(columns=['HeartDisease'])
 y = data_copy['HeartDisease']
 
@@ -27,7 +24,7 @@ X['RestingECG'] = pd.Categorical(X['RestingECG'], categories=['Normal', 'ST', 'L
 X['ST_Slope'] = pd.Categorical(X['ST_Slope'], categories=['Up', 'Flat', 'Down'])
 
 # One-Hot Encode non-binary categorical variables without dropping any category
-X = pd.get_dummies(X, columns=['Sex','ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
+X = pd.get_dummies(X, columns=['Sex', 'ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
 
 # Scale numerical features
 scaler = StandardScaler()
@@ -35,27 +32,28 @@ X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transfor
     X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']]
 )
 
-print(X.head())
-
+# Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
 
-log_reg_model = LogisticRegression(max_iter=1000)
-log_reg_model.fit(X_train, y_train)
+# Set up hyperparameter grid
+param_grid = {
+    'C': [0.01, 0.1, 1, 10, 100],                 # Regularization strength
+    'solver': ['lbfgs', 'liblinear', 'saga'],     # Optimization solvers
+}
 
-y_pred = log_reg_model.predict(X_test)
+# Grid Search
+grid_search = GridSearchCV(LogisticRegression(max_iter=1000), param_grid, cv=5, scoring='accuracy')
 
+# Fit GridSearchCV
+grid_search.fit(X_train, y_train)
+
+# Best parameters and model
+best_params = grid_search.best_params_
+best_model = grid_search.best_estimator_
+# print(f"Best Parameters: {best_params}")
+
+# Evaluate on test set
+y_pred = best_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# # Updated Feature Names after one-hot encoding
-# feature_names = X.columns
-
-# joblib.dump(feature_names, 'feature_names.pkl')
-
-# # Save the logistic regression model
-# joblib.dump(log_reg_model, 'logistic_regression_model.pkl')
-
-# # Save the scaler
-# joblib.dump(scaler, 'scaler.pkl')
-
-# print("Feature names, Model and scaler saved successfully.")
+print(f'Updated Logistic Regression Accuracy: {accuracy * 100:.2f}%')
+print("Updated Logistic Regression Classification Report:\n", classification_report(y_test, y_pred))

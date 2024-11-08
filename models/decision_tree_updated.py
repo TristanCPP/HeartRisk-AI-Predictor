@@ -1,17 +1,22 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, classification_report
-from xgboost import XGBClassifier
 
-# Step 1: Load the dataset
+# Load the dataset
 data = pd.read_csv('data/heart_disease_data.csv')
 
-# Step 2: Preprocess the data
-processed_data = data[data['Cholesterol'] != 0]
-X = processed_data.drop(columns=['HeartDisease'])
-y = processed_data['HeartDisease']
+data_copy = data.copy(deep=True)
+
+# Dropping rows where Cholesterol is 0
+data_copy = data_copy[(data_copy['Cholesterol']!=0)]
+
+# Dropping target value from training data
+X = data_copy.drop(columns=['HeartDisease'])
+y = data_copy['HeartDisease']
+
 
 # Define categorical data with all possible categories
 X['ChestPainType'] = pd.Categorical(X['ChestPainType'], categories=['ATA', 'NAP', 'ASY', 'TA'])
@@ -27,18 +32,26 @@ X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transfor
     X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']]
 )
 
-# Step 5: Split the data
+# Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
 
-# Step 6: Train the base XGBoost model
-xgb_model = XGBClassifier(random_state=101)
-xgb_model.fit(X_train, y_train)
+# Initialize and train Decision Tree with improved hyperparameters
+dt_model = DecisionTreeClassifier(
+    criterion='gini',
+    max_depth=10,
+    min_samples_split=10,
+    min_samples_leaf=5,
+    max_features='sqrt',
+    random_state=101
+)
 
-# Step 7: Evaluate the XGBoost model
-y_pred_xgb = xgb_model.predict(X_test)
+# Train the model
+dt_model.fit(X_train, y_train)
 
-accuracy = accuracy_score(y_test, y_pred_xgb)
-print(f"XGBoost Accuracy: {accuracy * 100:.2f}%")
+# Make predictions and evaluate accuracy
+y_pred = dt_model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Decision Tree Accuracy: {accuracy * 100:.2f}%')
+print("Decision Tree Classification Report:\n", classification_report(y_test, y_pred))
 
-# Print a detailed classification report
-print("XGBoost Classification Report:\n", classification_report(y_test, y_pred_xgb))
+

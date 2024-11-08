@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, StackingClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
 from xgboost import XGBClassifier
 
-# Step 1: Load the dataset
+# Load the dataset
 data = pd.read_csv('data/heart_disease_data.csv')
 
-# Step 2: Preprocess the data
+# Preprocess the data
 processed_data = data[data['Cholesterol'] != 0]
 X = processed_data.drop(columns=['HeartDisease'])
 y = processed_data['HeartDisease']
@@ -18,8 +21,8 @@ X['ChestPainType'] = pd.Categorical(X['ChestPainType'], categories=['ATA', 'NAP'
 X['RestingECG'] = pd.Categorical(X['RestingECG'], categories=['Normal', 'ST', 'LVH'])
 X['ST_Slope'] = pd.Categorical(X['ST_Slope'], categories=['Up', 'Flat', 'Down'])
 
-# One-Hot Encode non-binary categorical variables without dropping any category
-X = pd.get_dummies(X, columns=['Sex','ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
+# One-Hot Encode categorical features
+X = pd.get_dummies(X, columns=['Sex', 'ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
 
 # Scale numerical features
 scaler = StandardScaler()
@@ -27,18 +30,15 @@ X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transfor
     X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']]
 )
 
-# Step 5: Split the data
+# Split the data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
 
-# Step 6: Train the base XGBoost model
-xgb_model = XGBClassifier(random_state=101)
-xgb_model.fit(X_train, y_train)
+# Initialize and train the KNN model
+knn_model = KNeighborsClassifier(n_neighbors=5) 
+knn_model.fit(X_train, y_train)
 
-# Step 7: Evaluate the XGBoost model
-y_pred_xgb = xgb_model.predict(X_test)
-
-accuracy = accuracy_score(y_test, y_pred_xgb)
-print(f"XGBoost Accuracy: {accuracy * 100:.2f}%")
-
-# Print a detailed classification report
-print("XGBoost Classification Report:\n", classification_report(y_test, y_pred_xgb))
+# Evaluate the KNN model
+y_pred_knn = knn_model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred_knn)
+print(f'KNN Accuracy: {accuracy * 100:.2f}%')
+print("KNN Classification Report:\n", classification_report(y_test, y_pred_knn))
