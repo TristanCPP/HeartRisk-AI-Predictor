@@ -19,10 +19,7 @@ The **HeartRisk AI Predictor** is a machine learning-based application that pred
 - [Overview](#overview)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Usage](#usage)
 - [Project Structure](#project-structure)
-- [Testing](#testing)
 - [Future Enhancements](#future-enhancements)
 - [Contributors](#contributors)
 
