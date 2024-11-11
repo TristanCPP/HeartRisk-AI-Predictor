@@ -66,4 +66,4 @@ Heart Disease Risk Prediction/
 ---
 
 ## Contributors:
-Team Members: Tristan Garner, Muhsen Abumuhsen, Chase Lillard
+Team Members: Tristan Garner, Muhsen AbuMuhsen, Chase Lillard
