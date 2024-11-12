@@ -41,15 +41,16 @@ The **HeartRisk AI Predictor** is a machine learning-based application that pred
 
 Heart Disease Risk Prediction/
   - data/
-      - heart_disease_data.csv        # Input dataset
+      - heart_disease_data.csv        # Main dataset
   - models/
-      - random_forest_updated.py      # Random Forest training script
+      - (Main) random_forest_updated.py      # Random Forest training script
   - visualizations/
-      - visualize_data_model.py       # Visualization scripts
+      - visualize_data_model.py       # Visualization scripts for better understanding datasets and machine learning models
   - tests/
       - test_main.py                  # Unit tests for main functionality
       - test_updated_random_forest.py # Unit tests for Random Forest model
-  - main.py                           # Main application script
+  - main.py                           # Hardcoded Inputs Application Script that outputs risk score and risk category based on given inputs
+  - main_inputs.py                    # Main Application Script that simulates user inputs and input error handling and outputs the risk score and risk category
   - rf_model.pkl                      # Saved Random Forest model
   - README.md                         # Project documentation
 
@@ -60,7 +61,7 @@ Heart Disease Risk Prediction/
 ## Future Enhancements:
 - Frontend Development: Integrate a mobile application using React Native for user interaction.
 - Real-Time Feedback: Provide lifestyle recommendations to reduce CHD risk.
-- Model Optimization: Experiment with ensemble neural networks and other advanced methods.
+- Model Optimization: Further iterate and improve the current machine learning model.
 - Deployment: Host the application backend and frontend on a cloud platform for live usage.
 
 ---
