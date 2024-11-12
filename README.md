@@ -9,7 +9,7 @@ The **HeartRisk AI Predictor** is a machine learning-based application that pred
 - **Machine Learning Model**: A Random Forest classifier optimized for accuracy (~92.67%) on a curated heart disease dataset.
 - **Risk Prediction**: Provides a CHD risk probability based on user health metrics.
 - **Risk Categorization**: Classifies users into five risk tiers: Low Risk, Slight Risk, Moderate Risk, High Risk, Extreme Risk.
-- **Customizable Inputs**: Supports real-time user inputs with preprocessing and scaling for prediction.
+- **Customizable Inputs**: Supports user inputs with preprocessing and scaling for prediction.
 - **Unit Testing**: Includes test coverage for key functionalities like preprocessing, prediction, and accuracy validation.
 - **Data Visualizations**: Demonstrates dataset and model performance using heatmaps, distribution plots, feature importance, and confusion matrices.
 
