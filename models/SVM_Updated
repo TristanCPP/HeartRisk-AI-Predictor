@@ -8,10 +8,10 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder, MinMaxScaler
 from sklearn.metrics import accuracy_score, classification_report
 
-# Step 1: Load the dataset
+# Load the dataset
 data = pd.read_csv('data/heart_disease_data.csv')
 
-# Step 2: Make a copy of the original dataset
+# Make a copy of the original dataset
 processed_data = data.copy(deep=True)
 
 # Remove rows with Cholesterol value of 0

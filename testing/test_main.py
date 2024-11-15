@@ -1,7 +1,7 @@
 import unittest
 import joblib
 import pandas as pd
-from main import preprocess_user_data, risk_category 
+from main_alt import preprocess_user_data, risk_category 
 
 class TestMain(unittest.TestCase):
     @classmethod
