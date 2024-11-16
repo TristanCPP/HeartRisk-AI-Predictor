@@ -20,7 +20,7 @@ This project is a machine learning-based application that predicts the likelihoo
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Project Structure](#project-structure)
-- [Testing](#unit-testing)
+- [Testing](#testing)
 - [Future Enhancements](#future-enhancements)
 - [Contributors](#contributors)
 
