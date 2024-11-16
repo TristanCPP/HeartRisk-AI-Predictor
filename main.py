@@ -365,7 +365,7 @@ def show_informative_dialog():
 # Main application window setup
 root = tk.Tk()
 root.title("CHD Risk Prediction")  # Title of the application
-root.geometry("500x700")  # Adjusted to a smaller window height
+root.geometry("500x900")  # Adjusted to a smaller window height
 root.configure(bg="#f5f5f5")  # Background color
 
 # Apply styles to GUI elements

@@ -20,7 +20,7 @@ This project is a machine learning-based application that predicts the likelihoo
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Project Structure](#project-structure)
-- [Unit Testing](#unit-testing)
+- [Testing](#unit-testing)
 - [Future Enhancements](#future-enhancements)
 - [Contributors](#contributors)
 
@@ -65,7 +65,7 @@ Heart Disease Risk Prediction/
 
 ---
 
-## Unit Testing
+## Testing
 The ability to run unit/integration tests is made simple by Python's unittest framework.
 To run any of the tests just type 'python -m testing."NAME OF FILE", so for example:
 "python -m testing.main_unitTesting" will run the Unit Tests built for the main.py file
