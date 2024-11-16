@@ -67,8 +67,10 @@ Heart Disease Risk Prediction/
 
 ## Testing
 The ability to run unit/integration tests is made simple by Python's unittest framework.
-To run any of the tests just type 'python -m testing."NAME OF FILE", so for example:
-"python -m testing.main_unitTesting" will run the Unit Tests built for the main.py file
+To run any of the tests just type 'python -m testing."NAME OF FILE".
+
+For example:
+ - "python -m testing.main_unitTesting" will run the Unit Tests built for the main.py file
 and output the results of the tests.
 
 ---
