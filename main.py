@@ -365,7 +365,7 @@ def show_informative_dialog():
 # Main application window setup
 root = tk.Tk()
 root.title("CHD Risk Prediction")  # Title of the application
-root.geometry("500x1350")  # Window size
+root.geometry("500x700")  # Adjusted to a smaller window height
 root.configure(bg="#f5f5f5")  # Background color
 
 # Apply styles to GUI elements
@@ -375,13 +375,26 @@ style.configure("TEntry", font=("Arial", 12))
 style.configure("TButton", font=("Arial", 14), padding=5)
 style.configure("TCombobox", font=("Arial", 12))
 
-# Header for the application
-header = tk.Label(root, text="CHD Risk Prediction", font=("Helvetica", 16, "bold"), bg="#0078d7", fg="white", pady=10)
-header.pack(fill="x")
+# Create a Canvas widget for the scrollbar
+canvas = tk.Canvas(root, bg="#f5f5f5", highlightthickness=0)
+canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-# Frame for form inputs
-form_frame = ttk.Frame(root, padding=20)
-form_frame.pack(fill="both", expand=True)
+# Add a scrollbar to the canvas
+scrollbar = ttk.Scrollbar(root, orient=tk.VERTICAL, command=canvas.yview)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+# Configure the canvas to work with the scrollbar
+canvas.configure(yscrollcommand=scrollbar.set)
+canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+# Frame for form inputs inside the canvas
+form_frame = ttk.Frame(canvas, padding=(10, 0, 0, 0))  # Add 10px padding on the left
+canvas.create_window((0, 0), window=form_frame, anchor="nw", width=480)
+
+
+# Header for the application
+header = tk.Label(form_frame, text="CHD Risk Prediction", font=("Helvetica", 16, "bold"), bg="#0078d7", fg="white", pady=10)
+header.pack(fill="x")
 
 # Input field creation helper function
 def add_input_field(label, description, var_type, options=None):
@@ -397,18 +410,24 @@ def add_input_field(label, description, var_type, options=None):
     Returns:
         tk.StringVar or ttk.Entry: The input widget or variable for the field.
     """
-    ttk.Label(form_frame, text=label).pack(anchor="w", pady=5)
+    ttk.Label(form_frame, text=label).pack(anchor="w", pady=2)
     tk.Label(form_frame, text=description, font=("Arial", 10), fg="gray", wraplength=450).pack(anchor="w", pady=2)
     if options:
         var = tk.StringVar()
         field = ttk.Combobox(form_frame, textvariable=var, values=options, state="readonly")
-        field.pack(fill="x", pady=5)
+        field.pack(fill="x", pady=2)
         field.current(0)  # Set default selection to the first option
         return var
     else:
         field = ttk.Entry(form_frame)
-        field.pack(fill="x", pady=5)
+        field.pack(fill="x", pady=2)
         return field
+    
+def on_mousewheel(event):
+    canvas.yview_scroll(-1 * int(event.delta / 120), "units")
+
+    canvas.bind_all("<MouseWheel>", on_mousewheel)
+
 
 # Input fields for the form
 age_entry = add_input_field("Age (Years)", "Age of the patient (0–120 years).", int)
@@ -436,13 +455,12 @@ st_slope_var = add_input_field(
 )
 
 # Submit button
-submit_button = ttk.Button(root, text="Submit", command=on_submit)
+submit_button = ttk.Button(form_frame, text="Submit", command=on_submit)
 submit_button.pack(pady=20)
 
 # Footer
-footer = tk.Label(root, text="Powered by Machine Learning", font=("Arial", 10), bg="#f5f5f5", fg="gray")
+footer = tk.Label(form_frame, text="Powered by Machine Learning", font=("Arial", 10), bg="#f5f5f5", fg="gray")
 footer.pack(side="bottom", pady=10)
 
 # Start the GUI event loop
 root.mainloop()
-

@@ -20,6 +20,7 @@ This project is a machine learning-based application that predicts the likelihoo
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Project Structure](#project-structure)
+- [Unit Testing](#unit-testing)
 - [Future Enhancements](#future-enhancements)
 - [Contributors](#contributors)
 
@@ -38,35 +39,43 @@ This project is a machine learning-based application that predicts the likelihoo
 ---
 
 ## Project Structure
-
 Heart Disease Risk Prediction/
   - backend/
-      - app.py                        # Beginning of backend with API for integration with frontend (WIP)
+      - app.py                              # Beginning of backend with API for integration with frontend (Work in Progress)
   - data/
-      - heart_disease_data.csv        # Main dataset
+      - heart_disease_data.csv              # Main dataset
   - models/
-      - (Main) random_forest_updated.py      # Random Forest training script
+      - (Main) random_forest_updated.py     # Random Forest training script
       - All other models that were tested
   - visualizations/
-      - visualize_data_model.py       # Visualization scripts for better understanding datasets and machine learning models
+      - visualize_data_model.py             # Visualization scripts for better understanding datasets and machine learning models
       - visualization images 
   - tests/ (UPDATE)
-      - test_main.py                  # Unit tests for main functionality (UPDATE AFTER FINAL TESTS)
-      - test_updated_random_forest.py # Unit tests for Random Forest model(UDPATE AFTER FINAL TESTS)
-  - main_alt.py                       # Hardcoded Inputs Application Script that outputs risk score and risk category based on given inputs (For Testing)
-  - main.py                           # Main Application Script that simulates user inputs and input error handling and outputs the risk score and risk category in a simulated interface
-  - rf_model.pkl                      # Saved Random Forest model
-  - scaler.pkl                        # Saved Scaler
-  - feature_names.pkl                 # Saved Feature Names in order to ensure that data frames match
-  - README.md                         # Project documentation
+      - main_integrationTesting.py          # Integration tests for main functionality
+      - main_unitTesting.py                 # Unit tests for main functions and edge cases
+      - random_forest_integrationTesting.py # Integration testing for random forest model functionality
+      - random_forest_unitTesting.py        # Unit tests for random forest functions
 
+  - main_alt.py                             # Hardcoded Inputs Application Script that outputs risk score and risk category based on given inputs (For Testing)
+  - main.py                                 # Main Application Script that simulates user inputs and input error handling and outputs the risk score and risk category in a simulated interface
+  - rf_model.pkl                            # Saved Random Forest model to used for importing into necessary files
+  - scaler.pkl                              # Saved Scaler used for importing into necessary files
+  - feature_names.pkl                       # Saved Feature Names in order to ensure that data frames match
+  - README.md                               # Project documentation
 
+---
+
+## Unit Testing
+The ability to run unit/integration tests is made simple by Python's unittest framework.
+To run any of the tests just type 'python -m testing."NAME OF FILE", so for example:
+"python -m testing.main_unitTesting" will run the Unit Tests built for the main.py file
+and output the results of the tests.
 
 ---
 
 ## Future Enhancements:
 - Frontend Development: Integrate a mobile application using React Native for user interaction.
-- Real-Time Feedback: Provide lifestyle recommendations to reduce CHD risk.
+- Optimize Lifestyle Feedback: We plan to evolve the user feedback to be more dynamic than the current coded solution.
 - Model Optimization: Further iterate and improve the current machine learning model.
 - Deployment: Host the application backend and frontend on a cloud platform for live usage.
 
