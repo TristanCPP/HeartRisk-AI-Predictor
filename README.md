@@ -72,6 +72,7 @@ To run any of the tests just type 'python -m testing."NAME OF FILE".
 For example:
  - "python -m testing.main_unitTesting" will run the Unit Tests built for the main.py file
 and output the results of the tests.
+- Software testing has been conducting as a whole on main.py
 
 ---
 
