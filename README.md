@@ -10,7 +10,7 @@ This project is a machine learning-based application that predicts the likelihoo
 - **Risk Prediction**: Provides a CHD risk probability based on user health metrics.
 - **Risk Categorization**: Classifies users into five risk tiers: Low Risk, Slight Risk, Moderate Risk, High Risk, Extreme Risk.
 - **Customizable Inputs**: Supports user inputs with preprocessing and scaling for prediction.
-- **Unit Testing**: Includes test coverage for key functionalities like preprocessing, prediction, and accuracy validation.
+- **Testing**: Includes test coverage for key functionalities like preprocessing, prediction, and accuracy validation.
 - **Data Visualizations**: Demonstrates dataset and model performance using heatmaps, distribution plots, feature importance, and confusion matrices.
 
 ---
@@ -34,7 +34,7 @@ This project is a machine learning-based application that predicts the likelihoo
   - Visualizations: `matplotlib`, `seaborn`, `tkinter`
   - Backend Utilities: `joblib`, `pickle`
 - **Random Forest Classifier**: Primary model for CHD prediction.
-- **Unit Testing**: `unittest` framework.
+- **Testing**: `unittest` framework.
 
 ---
 
@@ -50,7 +50,7 @@ Heart Disease Risk Prediction/
   - visualizations/
       - visualize_data_model.py             # Visualization scripts for better understanding datasets and machine learning models
       - visualization images 
-  - tests/ (UPDATE)
+  - tests/
       - main_integrationTesting.py          # Integration tests for main functionality
       - main_unitTesting.py                 # Unit tests for main functions and edge cases
       - random_forest_integrationTesting.py # Integration testing for random forest model functionality
