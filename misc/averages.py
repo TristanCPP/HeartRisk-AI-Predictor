@@ -1,4 +1,4 @@
-# Used for calculating the averages used in unknown or empty fields
+# Used for calculating the averages used in unknown or empty fields when user enters data
 
 import pandas as pd
 
