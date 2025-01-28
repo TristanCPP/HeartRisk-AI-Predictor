@@ -27,6 +27,7 @@ X['ST_Slope'] = pd.Categorical(X['ST_Slope'], categories=['Up', 'Flat', 'Down'])
 # One-Hot Encode non-binary categorical variables without dropping any category
 X = pd.get_dummies(X, columns=['Sex','ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
 
+print(X.head())
 # Scale numerical features
 scaler = StandardScaler()
 X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transform(
