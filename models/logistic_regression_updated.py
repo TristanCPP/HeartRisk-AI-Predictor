@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load the dataset
 data = pd.read_csv('data/heart_disease_data.csv')
@@ -57,3 +57,5 @@ y_pred = best_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Updated Logistic Regression Accuracy: {accuracy * 100:.2f}%')
 print("Updated Logistic Regression Classification Report:\n", classification_report(y_test, y_pred))
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
