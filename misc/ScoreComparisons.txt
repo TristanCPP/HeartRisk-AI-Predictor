@@ -171,3 +171,15 @@ Updated Stacking Classifier Classification Report:
     accuracy                           0.85       150
    macro avg       0.86      0.85      0.85       150
 weighted avg       0.86      0.85      0.85       150
+
+
+Naive Bayes Accuracy: 90.00%
+Naive Bayes Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.89      0.90      0.90        72
+           1       0.91      0.90      0.90        78
+
+    accuracy                           0.90       150
+   macro avg       0.90      0.90      0.90       150
+weighted avg       0.90      0.90      0.90       150
