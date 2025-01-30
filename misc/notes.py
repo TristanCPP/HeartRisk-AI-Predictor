@@ -41,9 +41,3 @@
 # disp.plot(cmap=plt.cm.Blues)
 # plt.title("Confusion Matrix")
 # plt.show()
-
-
-
-
-
-#Gotta get that boom boom pow
