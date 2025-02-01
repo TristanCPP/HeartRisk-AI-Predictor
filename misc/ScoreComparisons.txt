@@ -17,7 +17,7 @@ Decision Tree Classification Report:
 weighted avg       0.82      0.81      0.81       150
 
 
-Decision Tree Accuracy: 88.67%
+Updated Decision Tree Accuracy: 88.67%
 Decision Tree Classification Report:
                precision    recall  f1-score   support
 
@@ -113,7 +113,7 @@ KNN Classification Report:
 weighted avg       0.89      0.89      0.89       150
 
 
-KNN Accuracy: 90.67%
+Updated KNN Accuracy: 90.67%
 KNN Classification Report:
                precision    recall  f1-score   support
 
@@ -183,3 +183,32 @@ Naive Bayes Classification Report:
     accuracy                           0.90       150
    macro avg       0.90      0.90      0.90       150
 weighted avg       0.90      0.90      0.90       150
+
+
+CNN Model Accuracy: 90.67%
+CNN Model Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.93      0.88      0.90        72
+           1       0.89      0.94      0.91        78
+
+    accuracy                           0.91       150
+   macro avg       0.91      0.91      0.91       150
+weighted avg       0.91      0.91      0.91       150
+[[62 10]
+ [ 6 72]]
+
+
+LightGBM Accuracy: 90.00%
+LightGBM Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.93      0.86      0.89        72
+           1       0.88      0.94      0.91        78
+
+    accuracy                           0.90       150
+   macro avg       0.90      0.90      0.90       150
+weighted avg       0.90      0.90      0.90       150
+
+[[62 10]
+ [ 5 73]]

@@ -63,50 +63,8 @@ print(f'Updated Random Forest Accuracy: {accuracy * 100:.2f}%')
 # Print a detailed classification report
 print("Updated Random Forest Classification Report:\n", classification_report(y_test, y_pred))
 
-
-
-
-
-
-# # # Section for already completed evaulations and exporting # # #
-# param_grid = {
-#     'n_estimators': [100, 250, 500],
-#     'max_depth': [8, 10, 12],
-#     'min_samples_split': [5, 10, 15],
-#     'min_samples_leaf': [2, 4, 6],
-#     'max_features': ['sqrt', 'log2'],
-#     'criterion': ['gini', 'entropy']
-# }
-
-# # Use GridSearchCV for hyperparameter tuning
-# grid_search = GridSearchCV(
-#     estimator=rf_model,
-#     param_grid=param_grid,
-#     cv=5,  # 5-fold cross-validation
-#     scoring='accuracy',
-#     verbose=2,
-#     n_jobs=-1
-# )
-
-# # Train the model using GridSearchCV
-# grid_search.fit(X_train, y_train)
-
-# # Retrieve the best model from GridSearchCV
-# best_rf_model = grid_search.best_estimator_
-
-# # Make predictions on the test set
-# y_pred = best_rf_model.predict(X_test)
-
-# # Evaluate the tuned model
-# accuracy = accuracy_score(y_test, y_pred)
-# print(f'Tuned Random Forest Accuracy: {accuracy * 100:.2f}%')
-
-# # Print a detailed classification report
-# print("Tuned Random Forest Classification Report:\n", classification_report(y_test, y_pred))
-
-# # Display the best parameters found by GridSearchCV
-# print("Best Hyperparameters:", grid_search.best_params_)
-
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
 
 # # Exporting Model
 # with open('rf_model.pkl', 'wb') as model_file:
