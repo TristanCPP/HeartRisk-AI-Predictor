@@ -78,6 +78,3 @@ print("CNN Model Classification Report:\n", classification_report(y_test, y_pred
 
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
-
-# # Save model
-# model.save('cnn_model.h5')

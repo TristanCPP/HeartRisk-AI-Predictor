@@ -1,10 +1,10 @@
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+# import seaborn as sns
+# import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load the dataset from the local file
 data = pd.read_csv('data/heart_disease_data.csv')
@@ -54,3 +54,6 @@ print(f'Random Forest Accuracy (Base Model): {accuracy * 100:.2f}%')
 
 # Print a detailed classification report
 print("Random Forest Classification Report (Base Model):\n", classification_report(y_test, y_pred))
+
+cm = confusion_matrix(y_test, y_pred)
+print(cm)

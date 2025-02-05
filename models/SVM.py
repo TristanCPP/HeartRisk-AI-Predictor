@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load the Cleveland dataset
 data = pd.read_csv('data/heart_disease_data.csv')
@@ -48,3 +48,6 @@ print(f'SVM Accuracy: {accuracy * 100:.2f}%')
 
 # Print a detailed classification report
 print("SVM Classification Report:\n", classification_report(y_test, y_pred))
+
+cm = confusion_matrix(y_test, y_pred)
+print(cm)

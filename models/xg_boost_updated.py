@@ -3,8 +3,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.feature_selection import SelectKBest, mutual_info_classif
-from sklearn.metrics import accuracy_score, classification_report
-from imblearn.over_sampling import SMOTE
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from xgboost import XGBClassifier
 
 # Load the dataset
@@ -58,3 +57,6 @@ print(f"Updated XGBoost Accuracy: {accuracy * 100:.2f}%")
 
 # Print a detailed classification report
 print("Updated XGBoost Classification Report:\n", classification_report(y_test, y_pred_xgb))
+
+cm = confusion_matrix(y_test, y_pred_xgb)
+print(cm)

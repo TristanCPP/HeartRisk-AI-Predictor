@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from xgboost import XGBClassifier
 
 # Load the dataset
@@ -42,3 +42,6 @@ y_pred_knn = knn_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred_knn)
 print(f'KNN Accuracy: {accuracy * 100:.2f}%')
 print("KNN Classification Report:\n", classification_report(y_test, y_pred_knn))
+
+cm = confusion_matrix(y_test, y_pred_knn)
+print(cm)
