@@ -5,7 +5,6 @@ import pickle
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay
 from sklearn.model_selection import train_test_split
-import shap
 
 # --- Load Dataset and Model ---
 # Load the dataset
