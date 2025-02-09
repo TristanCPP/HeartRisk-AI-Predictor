@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report,confusion_matrix
 from xgboost import XGBClassifier
 
 # Load the dataset
@@ -54,3 +54,6 @@ y_pred_stack = stacking_clf.predict(X_test)
 
 print(f"Stacking Classifier Accuracy: {accuracy_score(y_test, y_pred_stack) * 100:.2f}%")
 print("Stacking Classifier Classification Report:\n", classification_report(y_test, y_pred_stack))
+
+cm = confusion_matrix(y_test, y_pred_stack)
+print(cm)

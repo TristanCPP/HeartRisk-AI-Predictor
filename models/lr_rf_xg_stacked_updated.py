@@ -5,8 +5,7 @@ from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 from sklearn.model_selection import train_test_split, RandomizedSearchCV, cross_val_score
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.feature_selection import SelectKBest, mutual_info_classif
-from sklearn.metrics import accuracy_score, classification_report
-from imblearn.over_sampling import SMOTE
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from xgboost import XGBClassifier
 
 # Load the dataset
@@ -43,13 +42,9 @@ X_poly = poly.fit_transform(X)
 # Split the data
 X_train, X_test, y_train, y_test = train_test_split(X_poly, y, test_size=0.2, random_state=101)
 
-# Handle class imbalance with SMOTE
-smote = SMOTE(random_state=101)
-X_train_sm, y_train_sm = smote.fit_resample(X_train, y_train)
-
 # Feature selection with SelectKBest
 selector = SelectKBest(mutual_info_classif, k=10)  # Select top 10 features
-X_train_best = selector.fit_transform(X_train_sm, y_train_sm)
+X_train_best = selector.fit_transform(X_train, y_train)
 X_test_best = selector.transform(X_test)
 
 # Define the base models
@@ -68,7 +63,7 @@ param_dist = {
 xgb_search = RandomizedSearchCV(
     XGBClassifier(random_state=101), param_dist, n_iter=50, cv=5, scoring='accuracy', n_jobs=-1
 )
-xgb_search.fit(X_train_best, y_train_sm)
+xgb_search.fit(X_train_best, y_train)
 best_xgb = xgb_search.best_estimator_
 
 # Define the Stacking Classifier
@@ -83,8 +78,11 @@ stacking_clf = StackingClassifier(
 )
 
 # Train and evaluate the Stacking Classifier
-stacking_clf.fit(X_train_best, y_train_sm)
+stacking_clf.fit(X_train_best, y_train)
 y_pred_stack = stacking_clf.predict(X_test_best)
 
 print(f"Stacking Classifier Accuracy: {accuracy_score(y_test, y_pred_stack) * 100:.2f}%")
 print("Stacking Classifier Classification Report:\n", classification_report(y_test, y_pred_stack))
+
+cm = confusion_matrix(y_test, y_pred_stack)
+print(cm)

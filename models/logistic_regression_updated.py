@@ -57,5 +57,6 @@ y_pred = best_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Updated Logistic Regression Accuracy: {accuracy * 100:.2f}%')
 print("Updated Logistic Regression Classification Report:\n", classification_report(y_test, y_pred))
+
 cm = confusion_matrix(y_test, y_pred)
 print(cm)

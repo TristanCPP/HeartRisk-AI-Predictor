@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from xgboost import XGBClassifier
 
 # Step 1: Load the dataset
@@ -42,3 +42,6 @@ print(f"XGBoost Accuracy: {accuracy * 100:.2f}%")
 
 # Print a detailed classification report
 print("XGBoost Classification Report:\n", classification_report(y_test, y_pred_xgb))
+
+cm = confusion_matrix(y_test, y_pred_xgb)
+print(cm)

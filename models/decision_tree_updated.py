@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load the dataset
 data = pd.read_csv('data/heart_disease_data.csv')
@@ -53,5 +53,8 @@ y_pred = dt_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Decision Tree Accuracy: {accuracy * 100:.2f}%')
 print("Decision Tree Classification Report:\n", classification_report(y_test, y_pred))
+
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
 
 
