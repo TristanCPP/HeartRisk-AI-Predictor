@@ -34,7 +34,7 @@ X = pd.get_dummies(X, columns=['Sex', 'ExerciseAngina', 'ChestPainType', 'Restin
 temp_copy = X.copy(deep=True)
 
 # Scale numerical features
-scaler = pickle.load(open('scaler.pkl', 'rb'))
+scaler = StandardScaler()
 X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']] = scaler.fit_transform(
     X[['Age', 'RestingBP', 'Cholesterol', 'MaxHR', 'Oldpeak']]
 )
