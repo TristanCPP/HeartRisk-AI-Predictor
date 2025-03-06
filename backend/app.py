@@ -70,11 +70,12 @@ def predict():
         input_df = preprocess_user_data(user_data)
         #print("Final Processed Data for Prediction (Flask):\n", input_df)
 
-        risk_score = model.predict_proba(input_df)[0, 1] * 100  # Convert to percentage
+        risk_score = model.predict_proba(input_df)[0, 1] # Convert to percentage
 
-        print(f"📊 Risk Score from Model: {risk_score:.2f}%")  # Debugging Line
+        print(f"📊 Risk Score from Model: {risk_score * 100:.2f}%")  # Debugging Line
 
-        response_xml = f"""<HeartRiskResponse><RiskScore>{risk_score:.2f}%</RiskScore></HeartRiskResponse>"""
+        # Ensure response only contains numeric data
+        response_xml = f"""<HeartRiskResponse><RiskScore>{risk_score * 100:.2f}</RiskScore></HeartRiskResponse>"""
         return Response(response_xml, mimetype="application/xml")
 
     except Exception as e:
