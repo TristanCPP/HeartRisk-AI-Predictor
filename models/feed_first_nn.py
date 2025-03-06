@@ -68,3 +68,5 @@ y_pred = (y_pred_prob > 0.5).astype(int)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Optimized Neural Network Accuracy: {accuracy * 100:.2f}%")
 print("Classification Report:\n", classification_report(y_test, y_pred))
+
+model.save("heart_disease_model.h5")

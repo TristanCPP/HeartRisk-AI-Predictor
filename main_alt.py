@@ -19,11 +19,10 @@ def preprocess_user_data(user_data, feature_names, scaler):
 
     # Preprocess categorical features with predefined categories
     user_df['ChestPainType'] = pd.Categorical(user_df['ChestPainType'], categories=['ATA', 'NAP', 'ASY', 'TA'])
-    user_df['RestingECG'] = pd.Categorical(user_df['RestingECG'], categories=['Normal', 'ST', 'LVH'])
     user_df['ST_Slope'] = pd.Categorical(user_df['ST_Slope'], categories=['Up', 'Flat', 'Down'])
 
     # Apply one-hot encoding to match the training data
-    user_df = pd.get_dummies(user_df, columns=['Sex', 'ExerciseAngina', 'ChestPainType', 'RestingECG', 'ST_Slope'], dtype=int)
+    user_df = pd.get_dummies(user_df, columns=['Sex', 'ExerciseAngina', 'ChestPainType', 'ST_Slope'], dtype=int)
 
     # Add any missing columns from the training features, setting them to 0
     for col in feature_names:
@@ -71,21 +70,21 @@ feature_names = joblib.load('feature_names.pkl')
 
 # Example user input data (replace with actual user input)
 user_data = {
-    'Age': 28,
+    'Age': 45,
     'Sex': 'M',
     'ChestPainType': 'ASY',
-    'RestingBP': 120,
-    'Cholesterol': 150,
-    'FastingBS': 1,
-    'RestingECG': 'Normal',
-    'MaxHR': 180,
+    'RestingBP': 130,
+    'Cholesterol': 210,
+    'MaxHR': 150,
     'ExerciseAngina': 'Y',
-    'Oldpeak': 1.5,
+    'Oldpeak': 1.2,
     'ST_Slope': 'Up'
 }
 
 # Preprocess user data
 user_df = preprocess_user_data(user_data, feature_names, scaler)
+
+#print("Final Processed Data for Prediction (Local):\n", user_df)
 
 # Predict risk probability
 risk_probability = rf_model.predict_proba(user_df)[0][1]  # Probability of CHD
