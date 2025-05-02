@@ -104,4 +104,4 @@ You can modify and extend test files to simulate edge cases, verify scaling, or 
 
 ## Contributors
 **Team Members**: Tristan Garner, Muhsen AbuMuhsen, Chase Lillard  
-**Advisor**: Dr. [Professor's Name, optional]
+**Advisor**: Dr. Ahmad Al-Shami
