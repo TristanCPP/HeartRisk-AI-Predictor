@@ -1,89 +1,107 @@
-# Machine Learning Powered Heart Disease Risk Prediction
+# AI-Powered Heart Disease Risk Prediction – Backend
 
-![Project Banner](https://img.shields.io/badge/HeartRiskAI-Predictor-blue)
+![Project Banner](https://img.shields.io/badge/Backend-HeartRiskAI-blue)
 
 ## Overview
-This project is a machine learning-based application that predicts the likelihood of coronary heart disease (CHD) based on user-provided health data. The system is built using a Random Forest model and provides a current risk score and risk categorization (e.g., Low, Moderate, High Risk) to help users understand their current risk of developing the disease. It is designed as a backend system with plans to integrate a mobile application frontend.
+This backend system powers a machine learning-based application that predicts a user's risk of developing Coronary Heart Disease (CHD). It uses a trained Random Forest model and exposes it through a Flask-based API. The backend receives XML-encoded user input, processes and preprocesses the data, and returns a risk score prediction and risk category. It integrates seamlessly with a Kotlin-based mobile frontend.
 
 ## Features
-- **Machine Learning Model**: A Random Forest classifier optimized for accuracy (~92.67%) on a curated heart disease dataset.
-- **Risk Prediction**: Provides a CHD risk probability based on user health metrics.
-- **Risk Categorization**: Classifies users into five risk tiers: Low Risk, Slight Risk, Moderate Risk, High Risk, Extreme Risk.
-- **Customizable Inputs**: Supports user inputs with preprocessing and scaling for prediction.
-- **Testing**: Includes test coverage for key functionalities like preprocessing, prediction, and accuracy validation.
-- **Data Visualizations**: Demonstrates dataset and model performance using heatmaps, distribution plots, feature importance, and confusion matrices.
-
----
-
-## Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Project Structure](#project-structure)
-- [Testing](#testing)
-- [Future Enhancements](#future-enhancements)
-- [Contributors](#contributors)
-
----
+- **Random Forest Classifier**: Trained and optimized for high accuracy on curated CHD datasets.
+- **REST API with XML Support**: Receives structured health input in XML, processes it, and responds with risk score output.
+- **Model Serialization**: Trained model (`rf_model.pkl`), scaler (`scaler.pkl`), and feature structure (`feature_names.pkl`) saved for consistent deployment.
+- **Preprocessing Utilities**: Ensures user inputs are validated, one-hot encoded, and scaled to match training data.
+- **Test Interface**: Includes local simulation scripts for testing predictions independently of the frontend.
 
 ## Technologies Used
-- **Python 3.12**: Core language for development.
-- **Libraries**:
-  - Machine Learning: `scikit-learn`
-  - Data Manipulation: `pandas`, `numpy`
-  - Visualizations: `matplotlib`, `seaborn`, `tkinter`
-  - Backend Utilities: `joblib`, `pickle`
-- **Random Forest Classifier**: Primary model for CHD prediction.
-- **Testing**: `unittest` framework.
-
----
+- **Python 3.12**
+- **Flask** – Backend web framework and API handler
+- **Scikit-learn** – Machine Learning model training and prediction
+- **Pandas / NumPy** – Data preprocessing and manipulation
+- **Joblib** – For saving and loading models
+- **XML** – Used for structured API request/response formatting
+- **unittest** – Python's built-in framework for unit and integration testing
 
 ## Project Structure
-Heart Disease Risk Prediction/
-  - backend/
-      - app.py                              # Beginning of backend with API for integration with frontend (Work in Progress)
-  - data/
-      - heart_disease_data.csv              # Main dataset
-  - models/
-      - (Main) random_forest_updated.py     # Random Forest training script
-      - All other models that were tested
-  - visualizations/
-      - visualize_data_model.py             # Visualization scripts for better understanding datasets and machine learning models
-      - visualization images 
-  - tests/
-      - main_integrationTesting.py          # Integration tests for main functionality
-      - main_unitTesting.py                 # Unit tests for main functions and edge cases
-      - random_forest_integrationTesting.py # Integration testing for random forest model functionality
-      - random_forest_unitTesting.py        # Unit tests for random forest functions
+```
+heart-risk-backend/
+│
+├── app.py                      # Flask API that handles XML prediction requests
+├── rf_model.pkl                # Trained Random Forest model
+├── scaler.pkl                  # Scaler used during model training
+├── feature_names.pkl           # List of encoded/processed feature names
+│
+├── models/
+│   └── random_forest_updated.py    # Main script for training and exporting the final model
+│
+├── data/
+│   └── heart_disease_data_test.csv      # Cleaned dataset used for training/testing
+│
+├── visualizations/
+│   ├── visualize_data_model.py     # Data visualization script
+│   └── assets/                     # Output graphs and plots
+│
+├── tests/
+│   ├── main_unitTesting.py
+│   ├── random_forest_unitTesting.py
+│   ├── main_integrationTesting.py
+│   └── random_forest_integrationTesting.py
+│
+├── main_alt.py                # Local test script for simulating input and observing output
+├── README.md
+```
 
-  - main_alt.py                             # Hardcoded Inputs Application Script that outputs risk score and risk category based on given inputs (For Testing)
-  - main.py                                 # Main Application Script that simulates user inputs and input error handling and outputs the risk score and risk category in a simulated interface
-  - rf_model.pkl                            # Saved Random Forest model to used for importing into necessary files
-  - scaler.pkl                              # Saved Scaler used for importing into necessary files
-  - feature_names.pkl                       # Saved Feature Names in order to ensure that data frames match
-  - README.md                               # Project documentation
+## API Usage
 
----
+### Endpoint
+```
+POST /predict
+Content-Type: application/xml
+```
+
+### Sample Request Body
+```xml
+<HeartRiskRequest>
+    <Age>54</Age>
+    <Sex>M</Sex>
+    <ChestPainType>ASY</ChestPainType>
+    <RestingBP>130</RestingBP>
+    <Cholesterol>210</Cholesterol>
+    <MaxHR>150</MaxHR>
+    <ExerciseAngina>Y</ExerciseAngina>
+    <Oldpeak>1.2</Oldpeak>
+    <ST_Slope>Up</ST_Slope>
+</HeartRiskRequest>
+```
+
+### Sample Response
+```xml
+<HeartRiskResponse>
+    <RiskScore>64.29</RiskScore>
+</HeartRiskResponse>
+```
+
+## Running the Server Locally
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Start the API:
+   ```bash
+   python app.py
+   ```
 
 ## Testing
-The ability to run unit/integration tests is made simple by Python's unittest framework.
-To run any of the tests just type 'python -m testing."NAME OF FILE".
+Unit and integration tests are located in the `tests/` directory. To run a test:
+```bash
+python -m tests.main_unitTesting
+```
+You can modify and extend test files to simulate edge cases, verify scaling, or validate endpoint behavior.
 
-For example:
- - "python -m testing.main_unitTesting" will run the Unit Tests built for the main.py file
-and output the results of the tests.
+## Final Notes
+- Ensure all required files (`rf_model.pkl`, `scaler.pkl`, and `feature_names.pkl`) are present before starting the Flask app.
+- This backend is designed to be paired with the mobile frontend, which handles input collection and UI presentation.
+- The risk scoring model is based on medically-informed training data and provides feedback categories aligned with observed CHD risk tiers.
 
-Software testing was conducted using main.py to simulate mobile application functionality
-
----
-
-## Future Enhancements:
-- Frontend Development: Integrate a mobile application using React Native for user interaction.
-- Optimize Lifestyle Feedback: We plan to evolve the user feedback to be more dynamic than the current coded solution.
-- Model Optimization: Further iterate and improve the current machine learning model.
-- Deployment: Host the application backend and frontend on a cloud platform for live usage.
-
----
-
-## Contributors:
-Team Members: Tristan Garner, Muhsen AbuMuhsen, Chase Lillard
+## Contributors
+**Team Members**: Tristan Garner, Muhsen AbuMuhsen, Chase Lillard  
+**Advisor**: Dr. [Professor's Name, optional]
